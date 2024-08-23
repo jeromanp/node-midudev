@@ -1,10 +1,17 @@
-const http = require("node:http")
+const http = require('node:http') // protocolo HTTP
+const { findAvailablePort } = require('./10.free-port.js')
+
+console.log(process.env)
+
+const desiredPort = process.env.PORT ?? 3000
 
 const server = http.createServer((req, res) => {
-  console.log("request received");
-  res.end("Hola mundo!");
+  console.log('request received')
+  res.end('Hola mundo desde 9.http')
 })
 
-server.listen(0, () => {
-  console.log(`Server running on port http://localhost:${server.address().port}`)
+findAvailablePort(desiredPort).then(port => {
+  server.listen(port, () => {
+    console.log(`server listening on port http://localhost:${port}`)
+  })
 })
