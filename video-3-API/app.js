@@ -12,7 +12,11 @@ app.get("/movies", (req, res) => {
   res.json(movies);
 });
 
-
+app.get("/movies/:id", (req, res) => {
+  const id = req.params.id;
+  const movie = movies.find((movie) => movie.id === id);
+  res.json(movie);
+});
 
 const PORT = process.env.PORT ?? 1234;
 
