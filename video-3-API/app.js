@@ -1,6 +1,7 @@
 const express = require("express");
 const crypto = require("node:crypto");
 const movies = require("./movies.json");
+const validateMovie = require("./schemas/movie");
 
 const app = express();
 app.use(express.json());
@@ -29,22 +30,16 @@ app.get("/movies/:id", (req, res) => {
 });
 
 app.post("/movies", (req, res) => {
-  const { title, genre, year, director, duration, rate, poster } = req.body;
+  const result = validateMovie(req.body);
+
+  if (result.error) {
+    res.status(400).json({ error: result.error.message });
+  }
 
   const newMovie = {
     id: crypto.randomUUID(),
-    title,
-    genre,
-    year,
-    director,
-    duration,
-    rate: rate ?? 0,
-    poster,
+    ...result.data,
   };
-
-  if(!title || !genre || !year || !director ||!duration){
-    return res.status(400).json({message: "Faltan campos obligatorios"})
-  }
 
   movies.push(newMovie);
   res.status(201).json(newMovie);
