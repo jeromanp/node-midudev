@@ -1,7 +1,7 @@
 const express = require("express");
 const crypto = require("node:crypto");
 const movies = require("./movies.json");
-const validateMovie = require("./schemas/movie");
+const { validateMovie } = require("./schemas/movie");
 
 const app = express();
 app.use(express.json());
@@ -32,8 +32,8 @@ app.get("/movies/:id", (req, res) => {
 app.post("/movies", (req, res) => {
   const result = validateMovie(req.body);
 
-  if (result.error) {
-    res.status(400).json({ error: result.error.message });
+  if (!result.success) {
+    return res.status(400).json({ error: JSON.parse(result.error.message) });
   }
 
   const newMovie = {

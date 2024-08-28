@@ -15,6 +15,7 @@ const movieSchema = z.object({
       "Horror",
       "Thriller",
       "Sci-Fi",
+      "Crime",
     ]),
     {
       required_error: "El género es obligatorio",
@@ -23,8 +24,8 @@ const movieSchema = z.object({
   ),
   year: z.number().int().min(1900).max(2024),
   director: z.string(),
-  duration: z.number().int().positive(),
-  rate: z.number().min(0).max(10).optional(),
+  duration: z.number().int().positive().min(0),
+  rate: z.number().min(0).max(10).default(5),
   poster: z.string().url({
     message: "El poster debe ser una URL válida",
   }),
