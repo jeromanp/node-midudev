@@ -1,11 +1,15 @@
-const express = require("express");
-const crypto = require("node:crypto");
-const cors = require("cors");
-const movies = require("./movies.json");
-const { validateMovie, validatePartialMovie } = require("./schemas/movie");
+import express, { json } from "express";
+import { randomUUID } from "node:crypto";
+import cors from "cors";
+
+//leer json en ESModules
+import { createRequire } from "node:module";
+const require = createRequire(import.meta.url);
+const movies = require("./movies.json")
+import { validateMovie, validatePartialMovie } from "./schemas/movie.js";
 
 const app = express();
-app.use(express.json());
+app.use(json());
 //permitir todos los origenes
 // app.use(cors());
 
@@ -63,7 +67,7 @@ app.post("/movies", (req, res) => {
   }
 
   const newMovie = {
-    id: crypto.randomUUID(),
+    id: randomUUID(),
     ...result.data,
   };
 
@@ -97,7 +101,7 @@ app.patch("/movies/:id", (req, res) => {
 
 app.delete("/movies/:id", (req, res) => {
   const { id } = req.params;
-  const movieIndex = movies.findIndex((movie) => movie.id === id);
+  const movieIndex = findIndex((movie) => movie.id === id);
 
   if (movieIndex === -1) {
     return res.status(404).json({ message: "Movie not found" });
