@@ -6,12 +6,16 @@ const { validateMovie, validatePartialMovie } = require("./schemas/movie");
 
 const app = express();
 app.use(express.json());
+//permitir todos los origenes
+// app.use(cors());
+
 app.use(
   cors({
     origin: (origin, callback) => {
       const ACCEPTED_ORIGINS = [
         "http://localhost:8080",
         "http://localhost:1234",
+        "http://localhost:3000",
         "https://movies.com",
       ];
 
