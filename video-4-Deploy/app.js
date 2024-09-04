@@ -1,116 +1,17 @@
 import express, { json } from "express";
-import { randomUUID } from "node:crypto";
-import cors from "cors";
-
-//leer json en ESModules
-import { createRequire } from "node:module";
-const require = createRequire(import.meta.url);
-const movies = require("./movies.json")
-import { validateMovie, validatePartialMovie } from "./schemas/movie.js";
+import { moviesRouter } from "./routes/movies.js";
+import { corsMiddleware } from "./middlewares/cors.js";
 
 const app = express();
 app.use(json());
-//permitir todos los origenes
-// app.use(cors());
-
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      const ACCEPTED_ORIGINS = [
-        "http://localhost:8080",
-        "http://localhost:1234",
-        "http://localhost:3000",
-        "https://movies.com",
-      ];
-
-      if (ACCEPTED_ORIGINS.includes(origin)) {
-        return callback(null, true);
-      }
-
-      if (!origin) {
-        return callback(null, true);
-      }
-
-      return callback(new Error("Not allowed by CORS"));
-    },
-  })
-);
+app.use(corsMiddleware());
 app.disable("x-powered-by"); //deshabilita el header X-Powered-By: Express
 
 app.get("/", (req, res) => {
   res.json({ message: "Hola mundo" });
 });
 
-app.get("/movies", (req, res) => {
-  const { genre } = req.query;
-  if (genre) {
-    const filteredMovies = movies.filter((movie) =>
-      movie.genre.some((g) => g.toLowerCase() === genre.toLowerCase())
-    );
-    return res.json(filteredMovies);
-  }
-  res.json(movies);
-});
-
-app.get("/movies/:id", (req, res) => {
-  const id = req.params.id;
-  const movie = movies.find((movie) => movie.id === id);
-  if (movie) return res.json(movie);
-  res.status(404).json({ message: "Película no encontrada" });
-});
-
-app.post("/movies", (req, res) => {
-  const result = validateMovie(req.body);
-
-  if (!result.success) {
-    return res.status(400).json({ error: JSON.parse(result.error.message) });
-  }
-
-  const newMovie = {
-    id: randomUUID(),
-    ...result.data,
-  };
-
-  movies.push(newMovie);
-  res.status(201).json(newMovie);
-});
-
-app.patch("/movies/:id", (req, res) => {
-  const result = validatePartialMovie(req.body);
-
-  if (!result.success) {
-    return res.status(400).json({ error: JSON.parse(result.error.message) });
-  }
-
-  const { id } = req.params;
-  const movieIndex = movies.findIndex((movie) => movie.id === id);
-
-  if (movieIndex === -1) {
-    return res.status(404).json({ message: "Movie not found" });
-  }
-
-  const updateMovie = {
-    ...movies[movieIndex],
-    ...result.data,
-  };
-
-  movies[movieIndex] = updateMovie;
-
-  return res.json(updateMovie);
-});
-
-app.delete("/movies/:id", (req, res) => {
-  const { id } = req.params;
-  const movieIndex = findIndex((movie) => movie.id === id);
-
-  if (movieIndex === -1) {
-    return res.status(404).json({ message: "Movie not found" });
-  }
-
-  movies.splice(movieIndex, 1);
-
-  return res.json({ message: "Movie deleted" });
-});
+app.use("/movies", moviesRouter);
 
 const PORT = process.env.PORT ?? 1234;
 
