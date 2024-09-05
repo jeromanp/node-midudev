@@ -48,9 +48,9 @@ export class MovieController {
     const result = await MovieModel.delete({ id });
 
     if (result === false) {
-      return res.status(404).json({ message: "Movie not found" });
+      return res.status(404).json({ message: "Película no encontrada" });
     }
 
-    return res.json({ message: "Movie deleted" });
+    return res.json({ message: "Película eliminada con exito" });
   }
 }
