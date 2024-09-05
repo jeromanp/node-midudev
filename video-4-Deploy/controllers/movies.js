@@ -1,7 +1,7 @@
 //en type : module
 // no olvidad agregar la extension del archivo de donde se importan los elementos
 
-import { MovieModel } from "../models/movie.js";
+import { MovieModel } from "../models/local-file-system/movie.js";
 import { validateMovie, validatePartialMovie } from "../schemas/movie.js";
 
 export class MovieController {
