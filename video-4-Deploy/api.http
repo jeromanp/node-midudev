@@ -24,10 +24,13 @@ Content-Type: application/json
 }
 
 ### Actualizar una película
-PATCH http://localhost:1234/movies/93bc478f-8616-44f2-8e9a-5a2a13c116f3
+PATCH http://localhost:1234/movies/ddd9a4d8-dceb-4684-8a56-6c8e0f22ca66
 Content-Type: application/json
 
 {
   "title":"La Película de Eduardo",
-  "year": 1991
+  "year": 1992
 }
+
+### Borrar una película
+DELETE http://localhost:1234/movies/e5a3b0f7-db53-4918-9588-7a93353ac291
