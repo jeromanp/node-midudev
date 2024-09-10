@@ -3,8 +3,8 @@ import mysql from "mysql2/promise";
 const DEFAULT_CONFIG = {
   host: "localhost",
   user: "root",
-  port: 3306,
-  password: "",
+  password: "jeromanp",
+  port: 3307,
   database: "moviesdb",
 };
 const connectionString = process.env.DATABASE_URL ?? DEFAULT_CONFIG;
@@ -13,7 +13,7 @@ const connection = await mysql.createConnection(connectionString);
 
 export class MovieModel {
   static async getAll({ genre }) {
-    console.log("getAll");
+    console.log("Exito =>  getAll");
 
     if (genre) {
       const lowerCaseGenre = genre.toLowerCase();
@@ -38,7 +38,7 @@ export class MovieModel {
     }
 
     const [movies] = await connection.query(
-      "SELECT title, year, director, duration, poster, rate, BIN_TO_UUID(id) id FROM movie;"
+      "SELECT title, year, director, duration, poster, rate, BIN_TO_UUID(id) id FROM movies;"
     );
 
     return movies;
@@ -47,7 +47,7 @@ export class MovieModel {
   static async getById({ id }) {
     const [movies] = await connection.query(
       `SELECT title, year, director, duration, poster, rate, BIN_TO_UUID(id) id
-        FROM movie WHERE id = UUID_TO_BIN(?);`,
+        FROM movies WHERE id = UUID_TO_BIN(?);`,
       [id]
     );
 
