@@ -2,9 +2,11 @@
 // no olvidad agregar la extension del archivo de donde se importan los elementos
 
 //importar el modelo local
-import { MovieModel } from "../models/local-file-system/movie.js";
-//importar modelo de musql
+// import { MovieModel } from "../models/local-file-system/movie.js";
+
+//importar modelo de mysql
 import { MovieModel } from "../models/mysql/movie.js";
+
 import { validateMovie, validatePartialMovie } from "../schemas/movie.js";
 
 export class MovieController {
