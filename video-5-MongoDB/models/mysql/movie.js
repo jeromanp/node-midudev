@@ -96,7 +96,11 @@ export class MovieModel {
   }
 
   static async delete({ id }) {
-    // ejercio fácil: crear el delete
+    try {
+      await connection.query("DELETE FROM movies WHERE id = UUID_TO_BIN(?);", [id]);
+    } catch (e) {
+      throw new Error("Error deleting movie");
+    }
   }
 
   static async update({ id, input }) {
