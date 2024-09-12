@@ -3,7 +3,7 @@ import mysql from "mysql2/promise";
 const DEFAULT_CONFIG = {
   host: "localhost",
   user: "root",
-  password: "jeromanp",
+  password: process.env.PASSWORD,
   port: 3307,
   database: "moviesdb",
 };
